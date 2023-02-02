@@ -25,5 +25,5 @@ GROUP BY cal_date
 ORDER BY days
 ```
 
-![Chart](/Chart.png)
+![Chart](https://github.com/Zakaraya/ML_Practice/blob/master/Intern/SKU%20Sales/Chart.png)
 [Chart link](http://redash.lab.karpov.courses/embed/query/25642/visualization/53045?api_key=cVvTlbpK3sv6WSewya3e3XkCGPEGL6NkctKfCMw2&)
