@@ -27,4 +27,4 @@
 
 ## [Ссылка на график](http://redash.lab.karpov.courses/embed/query/25732/visualization/53195?api_key=dROiNi5LpLZxojGX6Naw65e0pFrikuru1Kw4CCdN&)
 
-![Chart](https://github.com/Zakaraya/ML_Practice/blob/master/Junior/Payments%Dashboard/Chart.png)
+![Chart](https://github.com/Zakaraya/ML_Practice/blob/master/Junior/Payments%20Dashboard/Chart.png)
