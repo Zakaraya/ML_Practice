@@ -37,14 +37,17 @@ def sample(click_id: int, offer_ids: str) -> dict:
     offer_id = int(offers_ids[0])
     if COUNT <= 100:
         # Sample random offer ID
+        # offer_id = int(np.random.choice(offers_ids))
         offer_id = int(np.random.choice(offers_ids))
         sampler = "random"
     else:
-        for item in click_offer:
+        for item in offers_ids:
             if item in offer_reward:
                 if len(click_offer[item]) > 0 and offer_reward[item] / len(click_offer[item]) > rpc_max:
                     rpc_max = offer_reward[item] / len(click_offer.get(item, set()))
                     offer_id = item
+                else:
+                    continue
         sampler = "greedy"
     click_offer[offer_id].add(click_id)
     recommendation_click[click_id] = offer_id
