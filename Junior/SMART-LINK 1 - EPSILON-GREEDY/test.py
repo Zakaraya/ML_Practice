@@ -34,24 +34,20 @@ def sample(click_id: int, offer_ids: str) -> dict:
     offers_ids = [int(offer) for offer in offer_ids.split(",")]
     if not offers_ids:
         raise HTTPException(status_code=400, detail="Offer IDs must be specified")
-    rpc_max = []
+    rpc_max = 0
     offer_id = int(offers_ids[0])
     if np.random.random() < 0.1:
         # Sample random offer ID
-        # offer_id = int(np.random.choice(offers_ids))
         offer_id = int(random.choice(offers_ids))
         sampler = "random"
     else:
-        for item in offer_ids:
+        for item in offers_ids:
             if item in offer_reward:
                 if len(click_offer[item]) > 0 and offer_reward[item] / len(click_offer[item]) > rpc_max:
                     rpc_max = offer_reward[item] / len(click_offer.get(item, set()))
                     offer_id = item
                 else:
                     continue
-        # offer_id = max(offers_ids)
-        # print(offers_ids)
-        # print(offers_ids.index(max(offers_ids)))
         sampler = "greedy"
     click_offer[offer_id].add(click_id)
     recommendation_click[click_id] = offer_id
