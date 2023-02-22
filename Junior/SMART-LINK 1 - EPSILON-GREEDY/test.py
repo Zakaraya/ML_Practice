@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import uvicorn
 from collections import defaultdict
@@ -11,6 +13,12 @@ recommendation_click = defaultdict(int)
 offer_reward = defaultdict(float)
 count_conversions = defaultdict(int)
 COUNT = 0
+
+
+# def upper_confidence_bound(offer_id):
+#     avg_revenue_per_click = offer_reward.get(offer_id, 0) / len(click_offer.get(offer_id, 0))
+#     delta_i = math.sqrt(1.5 * (math.log(count_conversions.get(offer_id, 0)) / len(click_offer.get(offer_id, 0))))
+#     upper_bound = avg_revenue_per_click + delta_i
 
 
 def increment():
@@ -34,21 +42,23 @@ def sample(click_id: int, offer_ids: str) -> dict:
     offers_ids = [int(offer) for offer in offer_ids.split(",")]
     if not offers_ids:
         raise HTTPException(status_code=400, detail="Offer IDs must be specified")
-    rpc_max = 0
+    max_upper_bound = 0
     offer_id = int(offers_ids[0])
     if np.random.random() < 0.1:
         # Sample random offer ID
         offer_id = int(random.choice(offers_ids))
-        sampler = "random"
     else:
         for item in offers_ids:
             if item in offer_reward:
-                if len(click_offer[item]) > 0 and offer_reward[item] / len(click_offer[item]) > rpc_max:
-                    rpc_max = offer_reward[item] / len(click_offer.get(item, set()))
-                    offer_id = item
-                else:
-                    continue
-        sampler = "greedy"
+                avg_revenue_per_click = offer_reward.get(item, 0) / len(click_offer.get(item, 0))
+                delta_i = math.sqrt(
+                    1.5 * (math.log(count_conversions.get(item, 0)) / len(click_offer.get(item, 0))))
+                upper_bound = avg_revenue_per_click + delta_i
+            else:
+                upper_bound = 1e500
+            if upper_bound > max_upper_bound:
+                max_upper_bound = upper_bound
+                offer_id = item
     click_offer[offer_id].add(click_id)
     recommendation_click[click_id] = offer_id
 
@@ -56,7 +66,6 @@ def sample(click_id: int, offer_ids: str) -> dict:
     response = {
         "click_id": click_id,
         "offer_id": offer_id,
-        "sampler": sampler,
     }
 
     return response
