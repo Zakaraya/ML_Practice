@@ -65,3 +65,41 @@ def ab_test(
     type_2_errors_rate = sum(type_2_errors) / len(type_2_errors)
 
     return type_2_errors_rate
+
+
+def ab_test_p_values(
+        n_simulations: int,
+        n_samples: int,
+        conversion_rate: float,
+        mde: float,
+        reward_avg: float,
+        reward_std: float,
+        alpha: float = 0.05,
+) -> float:
+    """Do the A/B test (simulation) and collect p-values."""
+    p_values = []
+    for i in range(n_simulations):
+        # Generate two cpc samples with the same cvr, reward_avg, and reward_std
+        # Check t-test and save p-value
+        cpc_a = cpc_sample(n_samples, conversion_rate, reward_avg, reward_std)
+        cpc_b = cpc_sample(n_samples, conversion_rate * (1 + mde), reward_avg, reward_std)
+        p_value = t_test(cpc_a, cpc_b, alpha)[1]
+        p_values.append(p_value)
+
+    # Plot the histogram of p-values
+    plt.hist(p_values, bins=50)
+    plt.xlabel('p-value')
+    plt.ylabel('Frequency')
+    plt.title('Distribution of p-values')
+    plt.show()
+    sns.kdeplot(p_values, shade=True)
+    plt.show()
+
+    # Calculate the type 1 errors rate
+    type_1_errors_rate = sum([p < alpha for p in p_values]) / len(p_values)
+
+    return type_1_errors_rate
+
+
+ab_test_p_values(n_simulations=1000, n_samples=100, conversion_rate=0.5, mde=0.1, reward_avg=1, reward_std=0.6,
+                 alpha=0.05)
