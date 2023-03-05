@@ -165,4 +165,4 @@ ke_daily_sales = pd.read_csv('ke_daily_sales.csv')
 ke_visits = pd.read_csv('ke_visits.csv')
 
 count_lag = CountCB('revenue')
-print(count_lag(ke_daily_sales))
+# print(count_lag(ke_daily_sales))
