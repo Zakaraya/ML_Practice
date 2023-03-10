@@ -6,7 +6,6 @@ import datetime
 
 import pandas as pd
 import numpy as np
-from scipy.stats import t
 
 
 @dataclass
@@ -159,10 +158,3 @@ class CountLag(Metric):
         b = df[self.column].agg('max').strftime(self.fmt)
         lag = (datetime.datetime.strptime(a, self.fmt) - datetime.datetime.strptime(b, self.fmt)).days
         return {"today": a, "last_day": b, "lag": lag}
-
-
-ke_daily_sales = pd.read_csv('ke_daily_sales.csv')
-ke_visits = pd.read_csv('ke_visits.csv')
-
-count_lag = CountCB('revenue')
-# print(count_lag(ke_daily_sales))

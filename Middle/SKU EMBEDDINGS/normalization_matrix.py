@@ -1,6 +1,8 @@
 import numpy as np
+# import pandas as pd
 from scipy.sparse import csr_matrix
 from sklearn.preprocessing import normalize
+# from solution import UserItemMatrix
 
 
 class Normalization:
@@ -72,6 +74,15 @@ class Normalization:
         n_users = matrix.shape[0]
         idf = np.log(n_users / matrix.astype(bool).sum(axis=0))
 
-        k = (k1 * ((1 - b) + b * (matrix.sum(axis=1) / matrix.mean())))
-        norm_matrix = tf.multiply((k1 + b) / (tf + k)) * idf
+        k = k1 * ((1 - b) + b * (matrix.sum(axis=1) / matrix.mean()))
+        # print(k)
+        # print(idf)
+        # norm_matrix = tf.multiply((k1 + b) / (tf + k)) * idf
+        norm_matrix = tf.multiply(((k1 + b) / (tf + k)) * idf)
         return norm_matrix.tocsr()
+
+
+# sales_data = pd.read_csv('test.csv')
+# matrix = UserItemMatrix(sales_data)
+# norm_matrix = Normalization()
+# print(norm_matrix.bm_25(matrix.csr_matrix))
